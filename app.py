@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -39,21 +39,58 @@ def add_todo():
     new_todo = Todo(text=text)
     db.session.add(new_todo)
     db.session.commit()
-    return jsonify(message='Todo added successfully')
+
+    response = f"""
+    <li>
+         <span
+          id="checkbox_{ new_todo.id }"
+          hx-post="/update_todo/{ new_todo.id }"
+          hx-swap="outerHTML"
+          hx-target="#checkbox_{ new_todo.id }"
+          hx-trigger="click"
+          > { '✔️' if new_todo.completed else '☐'  } </span
+        >
+        <span>{ new_todo.text }</span>
+        <button
+          hx-delete="/delete_todo/{ new_todo.id }"
+          hx-confirm="Are you sure?"
+          hx-target="closest li"
+          hx-swap="outerHTML"
+          hx-trigger="click"
+        >
+          Delete
+        </button>
+      </li>
+    """
+
+    return response
+
 
 @app.route('/update_todo/<int:id>', methods=['POST'])
 def update_todo(id):
-    todo = Todo.query.get(id)
+
+    todo = db.get_or_404(Todo, id)
     todo.completed = not todo.completed
     db.session.commit()
-    return jsonify(message='Todo updated successfully')
+    
+    response = f"""
+        <span
+          id="checkbox_{ todo.id }"
+          hx-post="/update_todo/{ todo.id }"
+          hx-swap="outerHTML"
+          hx-target="#checkbox_{ todo.id }"
+          hx-trigger="click"
+          >{ '✔️' if todo.completed else '☐' }</span
+        >
+    """
+
+    return response
 
 @app.route('/delete_todo/<int:id>', methods=['DELETE'])
 def delete_todo(id):
-    todo = Todo.query.get(id)
+    todo = db.get_or_404(Todo, id)
     db.session.delete(todo)
     db.session.commit()
-    return jsonify(message='Todo deleted successfully')
-
+    return ""
 if __name__ == '__main__':
     app.run(debug=True)

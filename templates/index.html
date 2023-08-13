@@ -6,16 +6,23 @@
   </head>
   <body>
     <h1>HTMX TODO App</h1>
-    <form id="addForm" hx-post="/add_todo">
+    <form
+      id="addForm"
+      hx-post="/add_todo"
+      hx-target="#new-todo"
+      hx-swap="beforeend"
+    >
       <input type="text" name="text" placeholder="Enter todo" required />
       <button type="submit">Add</button>
     </form>
-    <ul>
+    <ul id="new-todo" hx-swap="outerHTML swap:0.5s">
       {% for todo in todos %}
       <li>
         <span
+          id="checkbox_{{ todo.id }}"
           hx-post="/update_todo/{{ todo.id }}"
           hx-swap="outerHTML"
+          hx-target="#checkbox_{{ todo.id }}"
           hx-trigger="click"
           >{{ '✔️' if todo.completed else '☐' }}</span
         >
