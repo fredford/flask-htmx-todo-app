@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>HTMX TODO App</title>
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.5.0/dist/htmx.min.js"></script>
+  </head>
+  <body>
+    <h1>HTMX TODO App</h1>
+    <form id="addForm" hx-post="/add_todo">
+      <input type="text" name="text" placeholder="Enter todo" required />
+      <button type="submit">Add</button>
+    </form>
+    <ul>
+      {% for todo in todos %}
+      <li>
+        <span
+          hx-post="/update_todo/{{ todo.id }}"
+          hx-swap="outerHTML"
+          hx-trigger="click"
+          >{{ '✔️' if todo.completed else '☐' }}</span
+        >
+        <span>{{ todo.text }}</span>
+        <button
+          hx-delete="/delete_todo/{{ todo.id }}"
+          hx-confirm="Are you sure?"
+          hx-target="closest li"
+          hx-swap="outerHTML"
+          hx-trigger="click"
+        >
+          Delete
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
