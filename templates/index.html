@@ -3,9 +3,17 @@
   <head>
     <title>HTMX TODO App</title>
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.5.0/dist/htmx.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css')}}"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Monteserrat&display=swap");
+    </style>
   </head>
   <body>
-    <h1>HTMX TODO App</h1>
+    <h1>TODO List</h1>
     <form
       id="addForm"
       hx-post="/add_todo"
@@ -13,8 +21,9 @@
       hx-swap="beforeend"
     >
       <input type="text" name="text" placeholder="Enter todo" required />
-      <button type="submit">Add</button>
+      <button type="submit" id="submit">Add</button>
     </form>
+    <hr />
     <ul id="new-todo" hx-swap="outerHTML swap:0.5s">
       {% for todo in todos %}
       <li>
@@ -28,6 +37,7 @@
         >
         <span>{{ todo.text }}</span>
         <button
+          id="delete"
           hx-delete="/delete_todo/{{ todo.id }}"
           hx-confirm="Are you sure?"
           hx-target="closest li"

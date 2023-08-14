@@ -57,6 +57,7 @@ def add_todo():
           hx-target="closest li"
           hx-swap="outerHTML"
           hx-trigger="click"
+          id="delete"
         >
           Delete
         </button>
