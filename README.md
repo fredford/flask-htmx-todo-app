@@ -16,13 +16,13 @@ updating, and deleting TODO items.
 1. Clone this repository to your local machine:
 
 ```bash
-git clone https://github.com/fredford/htmx-testing.git
+git clone https://github.com/fredford/flask-htmx-todo-app.git
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd htmx-testing
+cd flask-htmx-todo-app
 ```
 
 3. Create a Python virtual environment:
